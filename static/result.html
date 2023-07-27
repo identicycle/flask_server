@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Identicycle</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <script type="text/javascript">
+        document.getElementsByClassName("")
+    </script>
+    <body>
+        <div class="banner">
+            <div class="navbar">
+                <div class="navbar">
+                    <img src="logo.png" class="logo"> 
+                
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/philosophy.html">Philosophy</a></li>
+                    <li><a href="/aboutus.html">About Us</a></li>
+                    <li><a href="/ourresearchjourney.html">Our Research Journey</a></li>
+                </ul>
+                
+                </div>
+            </div>
+
+            <div class="animation">
+                <h1>IDENTICYCLE</h1>
+                <div class="show-result">
+                    <h1>Image Tensor Representation</h1>
+                    <p>Original Image:</p>
+                    <img src="uploads/{{ data['image_name'] }}" alt="Uploaded Image">
+                    <br>
+                    <p>Predicted Class: {{ data['predicted_class'] }}</p>
+                    <p>Predicted Probabilities:</p>
+                    <ul>
+                        {% for label in data['predicted_probs'] %}
+                            <li>{{ label }}: {{data['predicted_probs'][label]}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
+
+<!-- <li>{{ label }}: {{ prob }}</li> -->
+<!-- |floatformat:"2" -->
