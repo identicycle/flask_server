@@ -23,6 +23,10 @@ body{
     background-position: center;
     
 }
+
+.result-image{
+  max-height: 40vh;
+}
 .navbar{
     width: 100%;
     padding: 25px 0;

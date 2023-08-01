@@ -6,21 +6,21 @@ from werkzeug.utils import secure_filename
 from torchvision.io import read_image
 import torch
 from torchvision import transforms
-from models import Identicycle
+from cnn.models import Identicycle
 
 # Load the trained model
 model_name = "3x3-3L-128N-200E-Model1"
-model_path = os.path.join(os.path.dirname( __file__ ), 'models', model_name)
+model_path = os.path.join(os.path.dirname( __file__ ), 'cnn', 'models', model_name)
 model_Test = Identicycle(input_shape=3, hidden_units=128, output_shape=7)
 model_Test.load_state_dict(torch.load(f=model_path, map_location=torch.device('cpu')))
 
 # WSGI Application
 # Defining upload folder path
-UPLOAD_FOLDER = os.path.join('..', 'static', 'uploads')
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
 # # Define allowed files
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
-app = Flask(__name__, static_folder='../static', static_url_path='/', template_folder='../static')  # Setup the flask app by creating an instance of Flask
+app = Flask(__name__, static_folder='static', static_url_path='/', template_folder='static')  # Setup the flask app by creating an instance of Flask
 
 # Configure upload folder for Flask application
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
