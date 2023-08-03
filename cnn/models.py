@@ -64,3 +64,62 @@ class Identicycle(nn.Module):
         x = self.conv_block_3(x)
         x = self.classifier(x)
         return x
+
+
+class Identicycle_Filters(nn.Module):
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int) -> None:
+        super().__init__()
+        self.conv_block_1 = nn.Sequential(
+            nn.Conv2d(in_channels=input_shape,
+                      out_channels=hidden_units,
+                      kernel_size=3,
+                      stride=1,
+                      padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units),
+            nn.Conv2d(in_channels=hidden_units,
+                      out_channels=hidden_units,
+                      kernel_size=3,
+                      stride=1,
+                      padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units),
+            nn.MaxPool2d(kernel_size=2)
+        )
+        self.conv_block_2 = nn.Sequential(
+            nn.Conv2d(hidden_units, hidden_units * 2, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units * 2),
+            nn.Conv2d(hidden_units * 2, hidden_units * 2, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units * 2),
+            nn.MaxPool2d(2)
+        )
+        self.conv_block_3 = nn.Sequential(
+            nn.Conv2d(hidden_units * 2, hidden_units * 4, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units * 4),
+            nn.Conv2d(hidden_units * 4, hidden_units * 4, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm2d(hidden_units * 4),
+            nn.MaxPool2d(2)
+        )
+        self.classifier = nn.Sequential(
+            nn.AdaptiveAvgPool2d((4, 4)),
+            nn.Flatten(),
+            nn.Linear(hidden_units * 4 * 4 * 4, hidden_units * 4),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(hidden_units * 4),
+            nn.Linear(hidden_units * 4, output_shape)
+        )
+
+    def forward(self, x: torch.Tensor):
+        activation_maps = []  # To store the activation maps
+        x = self.conv_block_1(x)
+        activation_maps.append(x.clone().detach())
+        x = self.conv_block_2(x)
+        activation_maps.append(x.clone().detach())
+        x = self.conv_block_3(x)
+        activation_maps.append(x.clone().detach())
+        x = self.classifier(x)
+        return x, activation_maps

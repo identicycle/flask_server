@@ -81,3 +81,9 @@ const animateNotes = (els) => {
     });
 };
 tl.add(animateNotes(notesG1)).add(animateNotes(notesG2), ">0.05").add(animateNotes(notesG3), ">0.25");
+
+let CHECKED = false
+document.addEventListener("pointerdown", e => {
+  CHECKED = !CHECKED
+  document.documentElement.style.setProperty("--light", CHECKED ? 1 : 0)
+})

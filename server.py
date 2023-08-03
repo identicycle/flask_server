@@ -7,12 +7,15 @@ from torchvision.io import read_image
 import torch
 from torchvision import transforms
 from cnn.models import Identicycle
+from cnn.models import Identicycle_Filters
+import matplotlib.pyplot as plt
 
 # Load the trained model
 model_name = "3x3-3L-128N-200E-Model1"
 model_path = os.path.join(os.path.dirname( __file__ ), 'cnn', 'models', model_name)
 model_Test = Identicycle(input_shape=3, hidden_units=128, output_shape=7)
 model_Test.load_state_dict(torch.load(f=model_path, map_location=torch.device('cpu')))
+model_Filters = Identicycle_Filters(input_shape=3, hidden_units=128, output_shape=7)
 
 # WSGI Application
 # Defining upload folder path
@@ -62,6 +65,8 @@ def image_upload_view():
     custom_image_pred_probs = custom_image_pred_probs.squeeze(dim=0)
     probabilities = custom_image_pred_probs
 
+    get_Image_Filters(custom_image_transformed.unsqueeze(dim=0),img_filename)
+
     data = {
         'image_name': img_filename,
         'image_path': image_path,
@@ -71,6 +76,22 @@ def image_upload_view():
     return render_template("result.html", data = data)
 
   return "Please upload proper image"
+def get_Image_Filters(img,name):
 
+# Forward pass through the model to get activation maps
+  model_Filters.eval()
+  with torch.inference_mode():
+    outputs, activation_maps = model_Filters(img)
+# Create a directory to save the activation map images
+  output_dir = 'conv_images'
+  os.makedirs(output_dir, exist_ok=True)
+
+# Save each activation map image individually
+  for i, maps in enumerate(activation_maps):
+    num_filters = maps.size(1)  # Number of filters
+    for j in range(num_filters):
+        filter_path = os.path.join(output_dir, f'{name}-Cnn{i+1}-{j+1}Filter.png')
+        filter_image = maps[0, j].detach().cpu().numpy()
+        plt.imsave(filter_path, filter_image)
 if __name__ == '__main__':  # If the script that was run is this script (we have not been imported)
   app.run(host="localhost", port=8080, debug=True)  # Start the server
