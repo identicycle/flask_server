@@ -396,8 +396,7 @@ Bongo cat
   /* About us */
   .big-cont{
     box-sizing: border-box;
-    padding-top: 40vh;
-    height: 120vh;
+    padding-top: 4vh;
     width: 100%;
   }
   .cont{
@@ -451,7 +450,7 @@ Bongo cat
 
 @media (min-width: 600px) {
   .card {
-    height: 350px;
+    height: 35vh;
   }
 }
 .card:before {

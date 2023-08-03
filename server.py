@@ -66,7 +66,7 @@ def image_upload_view():
     custom_image_pred_probs = custom_image_pred_probs.squeeze(dim=0)
     probabilities = custom_image_pred_probs
 
-    get_Image_Filters(custom_image_transformed.unsqueeze(dim=0),img_filename)
+    get_Image_Filters(custom_image_transformed.unsqueeze(dim=0),img_name, custom_image_transformed)
 
     data = {
         'image_name': img_name,
@@ -78,21 +78,22 @@ def image_upload_view():
     return render_template("result.html", data = data)
 
   return "Please upload proper image"
-def get_Image_Filters(img,name):
+def get_Image_Filters(img,name,raw_img):
 
 # Forward pass through the model to get activation maps
   model_Filters.eval()
   with torch.inference_mode():
     outputs, activation_maps = model_Filters(img)
 # Create a directory to save the activation map images
-  output_dir = 'conv_images'
+  output_dir = 'static/uploads/conv_images'
   os.makedirs(output_dir, exist_ok=True)
-
+  # raw_img_path = os.path.join(output_dir, f'{name}_0_0_image.png')
+  # plt.imsave(raw_img_path, raw_img.toTensor().permute(2,1,0))
 # Save each activation map image individually
   for i, maps in enumerate(activation_maps):
     num_filters = maps.size(1)  # Number of filters
     for j in range(num_filters):
-        filter_path = os.path.join(output_dir, f'{name}-Cnn{i+1}-{j+1}Filter.png')
+        filter_path = os.path.join(output_dir, f'{name}_{i+1}_{j}_image.png')
         filter_image = maps[0, j].detach().cpu().numpy()
         plt.imsave(filter_path, filter_image)
 if __name__ == '__main__':  # If the script that was run is this script (we have not been imported)
