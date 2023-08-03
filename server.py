@@ -72,6 +72,7 @@ def image_upload_view():
         'image_name': img_name,
         'image_filename': img_filename,
         'image_path': image_path,
+        'image_selected': [[2,3,4,6,8,10,12,14],[2,4,6,9,12,14,15,20,21,24,26,27,28,29,32,33],[2,3,7,9,10,12,13,18,19,25,26,27,29,30,31,32,33,35,38,41,42,46,50,51,53,54,55,56,58,60,62,64,65,68,69,501]],
         'predicted_class': custom_image_pred_class,
         'predicted_probs': {class_names[i]: round(probabilities[i].item(),4) for i in range(len(class_names))}
     }
