@@ -5,9 +5,6 @@
         <link rel="stylesheet" href="style.css">
     </head>
 
-    <script type="text/javascript">
-        document.getElementsByClassName("")
-    </script>
     <body>
         <div class="banner">
             <div class="navbar">
@@ -27,11 +24,18 @@
             <div class="animation">
                 <h1>IDENTICYCLE</h1>
                 <div class="show-result">
-                    <h1>Image</h1>
+                    <br/>
+                    <br/>
                     <p>Original Image:</p>
-                    <img class="result-image" src="uploads/{{ data['image_name'] }}" alt="Uploaded Image">
-                    <br>
+                    <img class="result-image" src="uploads/{{ data['image_filename'] }}" alt="Uploaded Image">
+                    <br/>
+                    <br/>
+                    <p>Image Tensor Representation:</p>
+                    {% include "cnn.svg" ignore missing with context %}
+                    <br/>
+                    <br/>
                     <p>Predicted Class: {{ data['predicted_class'] }}</p>
+                    <br/>
                     <p>Predicted Probabilities:</p>
                     <ul>
                         {% for label in data['predicted_probs'] %}
@@ -45,5 +49,3 @@
     </body>
 </html>
 
-<!-- <li>{{ label }}: {{ prob }}</li> -->
-<!-- |floatformat:"2" -->

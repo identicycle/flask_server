@@ -41,6 +41,7 @@ def image_upload_view():
     uploaded_img = request.files['uploaded-image']
     # Extracting uploaded data file name
     img_filename = secure_filename(uploaded_img.filename)
+    img_name = img_filename.split(".")[0]
     # Upload file to database (defined uploaded folder in static path)
     image_path = os.path.join(os.path.dirname( __file__ ), app.config['UPLOAD_FOLDER'], img_filename)
     uploaded_img.save(image_path)
@@ -68,7 +69,8 @@ def image_upload_view():
     get_Image_Filters(custom_image_transformed.unsqueeze(dim=0),img_filename)
 
     data = {
-        'image_name': img_filename,
+        'image_name': img_name,
+        'image_filename': img_filename,
         'image_path': image_path,
         'predicted_class': custom_image_pred_class,
         'predicted_probs': {class_names[i]: round(probabilities[i].item(),4) for i in range(len(class_names))}

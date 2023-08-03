@@ -24,6 +24,17 @@ body{
     
 }
 
+.cnn-visualizer {
+  background-color: white;
+  width: 60vw;
+  height: 45vw;
+  /* aspect-ratio: 3/4; */
+}
+
+.test {
+  color: white;
+}
+
 .result-image{
   max-height: 40vh;
 }
