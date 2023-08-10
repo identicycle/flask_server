@@ -8,7 +8,7 @@ body{
     background-color: rgba(0, 0, 0, 1);
 }
 .banner{
-    width: 100%;
+    width: 100vw;
     height: 75vh;
     background-color: black;
     background-size: cover;
@@ -16,7 +16,7 @@ body{
     
 }
 .banner-aboutus{
-    width: 100%;
+    width: 100vw;
     height: 20vh;
     background-color: black;
     background-size: cover;
@@ -39,11 +39,15 @@ body{
   max-height: 40vh;
 }
 .navbar{
-    width: 100%;
-    padding: 25px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  background: black;
+  z-index: 100;
+  width: 100vw;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .logo{
     width: 120px;
