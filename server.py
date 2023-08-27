@@ -98,7 +98,6 @@ def get_Image_Filters(img,name,raw_img):
         filter_image = maps[0, j].detach().cpu().numpy()
         plt.imsave(filter_path, filter_image)
 if __name__ == '__main__':  # If the script that was run is this script (we have not been imported)
-  print(os.environ.get('ENV'), os.environ.get('ENV')=="production")
   if os.environ.get('ENV')=="production":
     from waitress import serve
     serve(app, host='0.0.0.0', port=80)
