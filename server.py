@@ -2,6 +2,14 @@ from flask import Flask, request, render_template, send_from_directory, flash  #
 import os
 from werkzeug.utils import secure_filename
 
+# ------------------------------
+# Environment Variable Setup
+# ------------------------------
+from dotenv import load_dotenv
+
+# Load the base .env file
+load_dotenv(".env")
+
 # for cnn
 from torchvision.io import read_image
 import torch
