@@ -133,5 +133,5 @@ if __name__ == '__main__':  # If the script that was run is this script (we have
   if os.environ.get('ENV')=="development":
     app.run(host="localhost", port=8080, debug=True)
   else:
-    app.run(host="localhost", port=80)
+    app.run(host="0.0.0.0", port=80)
     
