@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_from_directory  # Import flask
+from flask import Flask, request, render_template, send_from_directory, flash  # Import flask
 import os
 from werkzeug.utils import secure_filename
 
@@ -9,6 +9,7 @@ from torchvision import transforms
 from cnn.models import Identicycle
 from cnn.models import Identicycle_Filters
 import matplotlib.pyplot as plt
+from PIL import Image
 
 # Load the trained model
 model_name = "3x3-3L-128N-200E-Model1"
@@ -21,7 +22,7 @@ model_Filters = Identicycle_Filters(input_shape=3, hidden_units=128, output_shap
 # Defining upload folder path
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 # # Define allowed files
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__, static_folder='static', static_url_path='/', template_folder='static')  # Setup the flask app by creating an instance of Flask
 
@@ -30,33 +31,53 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Define secret key to enable session
 app.secret_key = 'This is your secret key to utilize session in Flask'
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')  # When someone goes to / on the server, execute the following function
 def home():
   return app.send_static_file('index.html')  # Return index.html from the static folder
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def load_image(image_path):
+    try:
+        image = Image.open(image_path).convert('RGB')
+        transform = transforms.Compose([
+            transforms.Resize((128, 128)),
+            transforms.ToTensor(),
+        ])
+        image_tensor = transform(image)
+        return image_tensor
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        return None
+
+
 @app.route('/predict',  methods=("POST", "GET"))
 def image_upload_view():
-  if request.method == 'POST':
-    uploaded_img = request.files['uploaded-image']
-    # Extracting uploaded data file name
-    img_filename = secure_filename(uploaded_img.filename)
-    img_name = img_filename.split(".")[0]
-    # Upload file to database (defined uploaded folder in static path)
-    image_path = os.path.join(os.path.dirname( __file__ ), app.config['UPLOAD_FOLDER'], img_filename)
-    uploaded_img.save(image_path)
-    
-    # Read the image from the temporary file and preprocess it
-    custom_image = read_image(image_path).type(torch.float32) / 255.
-    custom_image_transform = transforms.Compose([
-        transforms.Resize((128, 128)),
-    ])
-    custom_image_transformed = custom_image_transform(custom_image)
-
+    if request.method == 'POST':
+        if 'uploaded-image' not in request.files:
+            flash("no file part")
+            return "No file part"
+        uploaded_img = request.files['uploaded-image']
+        
+        if uploaded_img.filename == '' or not allowed_file(uploaded_img.filename):
+            flash("No selected file or file type not allowed")
+        img_filename = secure_filename(uploaded_img.filename)
+        img_name = img_filename.split(".")[0]
+        image_path = os.path.join(os.path.dirname(__file__), app.config['UPLOAD_FOLDER'], img_filename)
+        uploaded_img.save(image_path)
+        
+        image_tensor = load_image(image_path)
+        if image_tensor is None:
+           return "Error processing image. Please upload a valid image file."
     # Make predictions
     model_Test.eval()
     with torch.inference_mode():
-        custom_image_pred = model_Test(custom_image_transformed.unsqueeze(dim=0))
+        custom_image_pred = model_Test(image_tensor.unsqueeze(dim=0))
     custom_image_pred_probs = torch.softmax(custom_image_pred, dim=1)
     custom_image_pred_label = torch.argmax(custom_image_pred_probs, dim=1).item()
 
@@ -66,7 +87,7 @@ def image_upload_view():
     custom_image_pred_probs = custom_image_pred_probs.squeeze(dim=0)
     probabilities = custom_image_pred_probs
 
-    get_Image_Filters(custom_image_transformed.unsqueeze(dim=0),img_name, custom_image_transformed)
+    get_Image_Filters(image_tensor.unsqueeze(dim=0),img_name, image_tensor)
 
     data = {
         'image_name': img_name,
@@ -78,7 +99,6 @@ def image_upload_view():
     }
     return render_template("result.html", data = data)
 
-  return "Please upload proper image"
 def get_Image_Filters(img,name,raw_img):
 
 # Forward pass through the model to get activation maps
