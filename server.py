@@ -123,7 +123,6 @@ def get_Image_Filters(img,name,raw_img):
         plt.imsave(filter_path, filter_image)
 if __name__ == '__main__':  # If the script that was run is this script (we have not been imported)
   if os.environ.get('ENV')=="production":
-    from waitress import serve
-    serve(app, host='0.0.0.0', port=80)
+    app.run(host="localhost", port=80)
   else:
-    app.run(host="localhost", port=8080, debug=True)  # Start the server
+    app.run(host="localhost", port=8080, debug=True)
