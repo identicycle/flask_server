@@ -6,17 +6,17 @@
     </pattern>
     {% for x in range(8) %}
       <pattern id="1_{{x}}_pattern" x="0" y="0" width="1" height="1" viewBox="0 0 64 64" preserveAspectRatio="none">
-        <image id="1_{{x}}_image" width="64" height="64" href="uploads/conv_images/{{data['image_name']}}_1_{{data['image_selected'][0][x] - 1}}_image.png" />
+        <image id="1_{{x}}_image" width="64" height="64" href="uploads/conv_images/{{data['image_name']}}_1_{{data['image_selected'][0][x]}}_image.png" />
       </pattern>
     {% endfor %}
     {% for x in range(16) %}
       <pattern id="2_{{x}}_pattern" x="0" y="0" width="1" height="1" viewBox="0 0 32 32" preserveAspectRatio="none">
-        <image id="2_{{x}}_image" width="32" height="32" href="uploads/conv_images/{{data['image_name']}}_2_{{data['image_selected'][1][x] - 1}}_image.png" />
+        <image id="2_{{x}}_image" width="32" height="32" href="uploads/conv_images/{{data['image_name']}}_2_{{data['image_selected'][1][x]}}_image.png" />
       </pattern>
     {% endfor %}
     {% for x in range(32) %}
       <pattern id="3_{{x}}_pattern" x="0" y="0" width="1" height="1" viewBox="0 0 16 16" preserveAspectRatio="none">
-        <image id="3_{{x}}_image" width="16" height="16" href="uploads/conv_images/{{data['image_name']}}_3_{{data['image_selected'][2][x] - 1}}_image.png" />
+        <image id="3_{{x}}_image" width="16" height="16" href="uploads/conv_images/{{data['image_name']}}_3_{{data['image_selected'][2][x]}}_image.png" />
       </pattern>
     {% endfor %}
   </defs>
