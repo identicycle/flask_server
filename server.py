@@ -122,7 +122,8 @@ def get_Image_Filters(img,name,raw_img):
         filter_image = maps[0, j].detach().cpu().numpy()
         plt.imsave(filter_path, filter_image)
 if __name__ == '__main__':  # If the script that was run is this script (we have not been imported)
-  if os.environ.get('ENV')=="production":
-    app.run(host="localhost", port=80)
-  else:
+  if os.environ.get('ENV')=="development":
     app.run(host="localhost", port=8080, debug=True)
+  else:
+    app.run(host="localhost", port=80)
+    
